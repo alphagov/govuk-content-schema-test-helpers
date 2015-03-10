@@ -14,7 +14,29 @@ This app provides test helpers for working with [alphagov/govuk-content-schemas]
 
 ### Usage
 
-TBD
+You will need to configure which context your app is in. A good place to do this is in `test_helper.rb` or `spec_helper.rb`:
+
+```ruby
+  require 'govuk-content-schema-test-helpers'
+
+  GovukContentSchemaTestHelpers.configure do |config|
+    config.schema_type = 'frontend'
+    config.project_root = Rails.root
+  end
+```
+
+`schema_type` should be one of `frontend` or `publisher` depending upon which type of document you want to validate.
+
+If you are not using Rails, you'll need to set `project_root` using [`__FILE__`](http://ruby-doc.org/docs/keywords/1.9/Object.html#method-i-__FILE__) or similar.
+
+
+In your tests, you can then use it like this:
+
+```ruby
+  GovukContentSchemaTestHelpers::Validator.schema_path('finder')
+  # => /var/govuk/my-app/formats/finder/frontend/schema.json
+```
+
 
 ### Running the test suite
 

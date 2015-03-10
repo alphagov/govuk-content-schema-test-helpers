@@ -13,4 +13,20 @@ describe GovukContentSchemaTestHelpers::Validator do
       expect(subject.govuk_content_schemas_path).to eql('../a-custom-path')
     end
   end
+
+  describe '#schema_path' do
+    before do
+      GovukContentSchemaTestHelpers.configuration.project_root = '/an/absolute/path'
+      GovukContentSchemaTestHelpers.configuration.schema_type = 'a-type'
+    end
+
+    after do
+      GovukContentSchemaTestHelpers.configuration.project_root = nil
+      GovukContentSchemaTestHelpers.configuration.schema_type = nil
+    end
+
+    it 'returns the absolute path for the given format schema, based on configuration' do
+      expect(subject.schema_path('minidisc')).to eql("/an/absolute/path/../govuk-content-schemas/formats/minidisc/a-type/schema.json")
+    end
+  end
 end
