@@ -15,4 +15,7 @@ Gem::Specification.new do |s|
   s.files       = ["lib/govuk-content-schema-test-helpers.rb"]
   s.homepage    = 'https://github.com/alphagov/govuk-content-schema-test-helpers'
   s.license     = 'MIT'
+
+  s.add_development_dependency 'rake', '10.4.2'
+  s.add_development_dependency 'rspec', '3.2.0'
 end
