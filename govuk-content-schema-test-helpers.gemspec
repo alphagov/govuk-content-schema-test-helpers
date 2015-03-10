@@ -16,6 +16,8 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/alphagov/govuk-content-schema-test-helpers'
   s.license     = 'MIT'
 
+  s.add_runtime_dependency 'json-schema', '~> 2.5.1'
+
   s.add_development_dependency 'rake', '10.4.2'
   s.add_development_dependency 'rspec', '3.2.0'
 end

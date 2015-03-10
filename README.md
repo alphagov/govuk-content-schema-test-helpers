@@ -30,17 +30,26 @@ You will need to configure which context your app is in. A good place to do this
 If you are not using Rails, you'll need to set `project_root` using [`__FILE__`](http://ruby-doc.org/docs/keywords/1.9/Object.html#method-i-__FILE__) or similar.
 
 
-In your tests, you can then use it like this:
+To validate a document against the schema:
 
 ```ruby
-  GovukContentSchemaTestHelpers::Validator.schema_path('finder')
-  # => /var/govuk/my-app/formats/finder/frontend/schema.json
+  validator = GovukContentSchemaTestHelpers::Validator.new('finder', '{ "some": "json" }')
+  validator.valid?
+  # => false
+  validator.errors
+  # => ["The property '#/' did not contain a required property of 'base_path'", ...]
 ```
 
 
 ### Running the test suite
 
-TBD
+The tests in this project rely upon [govuk-content-schemas](http://github.com/alphagov/govuk-content-schemas). By default these should be in the parent directory, otherwise you can specify their location with the `GOVUK_CONTENT_SCHEMAS_PATH` environment variable.
+
+Assuming you already have govuk-content-schemas cloned:
+
+```
+  bundle exec rake
+```
 
 
 ## Licence
