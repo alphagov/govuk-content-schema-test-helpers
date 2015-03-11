@@ -27,7 +27,10 @@ You will need to configure which context your app is in. A good place to do this
 
 `schema_type` should be one of `frontend` or `publisher` depending upon which type of document you want to validate.
 
-If you are not using Rails, you'll need to set `project_root` using [`__FILE__`](http://ruby-doc.org/docs/keywords/1.9/Object.html#method-i-__FILE__) or similar.
+If you are not using Rails, you'll need to set `project_root` differently. Assuming the file you are adding this to is one directory down from your project root:
+```ruby
+  config.project_root = File.absolute_path(File.join(File.basename(__FILE__), '..'))
+```
 
 To load an example document:
 
