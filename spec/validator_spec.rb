@@ -40,7 +40,7 @@ describe GovukContentSchemaTestHelpers::Validator do
 
     describe 'when the schema file does not exist' do
       before do
-        GovukContentSchemaTestHelpers.configuration.project_root = File.join(__FILE__, '..')
+        GovukContentSchemaTestHelpers.configuration.project_root = File.join(File.dirname(__FILE__), '..')
         GovukContentSchemaTestHelpers.configuration.schema_type = 'a-type'
       end
 

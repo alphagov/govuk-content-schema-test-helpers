@@ -5,9 +5,8 @@ module GovukContentSchemaTestHelpers
 
   class Validator
     def self.schema_path(schema_name)
-      project_root = GovukContentSchemaTestHelpers.configuration.project_root
       schema_type = GovukContentSchemaTestHelpers.configuration.schema_type
-      File.join(project_root, Util.govuk_content_schemas_path, "/formats/#{schema_name}/#{schema_type}/schema.json").to_s
+      File.join(Util.govuk_content_schemas_path, "/formats/#{schema_name}/#{schema_type}/schema.json").to_s
     end
 
     # schema_name should be a string, such as 'finder'
