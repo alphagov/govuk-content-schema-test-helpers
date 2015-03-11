@@ -29,6 +29,12 @@ You will need to configure which context your app is in. A good place to do this
 
 If you are not using Rails, you'll need to set `project_root` using [`__FILE__`](http://ruby-doc.org/docs/keywords/1.9/Object.html#method-i-__FILE__) or similar.
 
+To load an example document:
+
+```ruby
+  GovukContentSchemaTestHelpers::Examples.new.get('finder', 'contacts')
+  # => '{ "some": "json" }'
+```
 
 To validate a document against the schema:
 
