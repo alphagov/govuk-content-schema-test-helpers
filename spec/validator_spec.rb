@@ -1,5 +1,16 @@
 require 'spec_helper'
 
+def a_valid_redirect_document
+  {
+    "format" => "redirect",
+    "publishing_app" => "publisher",
+    "update_type" => "major",
+    "redirects" => [
+      {"path" => "/foo", "type" => "prefix", "destination" => "/new-foo"},
+    ]
+  }
+end
+
 describe GovukContentSchemaTestHelpers::Validator do
   let(:subject) { GovukContentSchemaTestHelpers::Validator }
 
@@ -58,7 +69,7 @@ describe GovukContentSchemaTestHelpers::Validator do
   describe '#errors' do
     before do
       GovukContentSchemaTestHelpers.configuration.project_root = File.absolute_path(File.join(File.basename(__FILE__), '..'))
-      GovukContentSchemaTestHelpers.configuration.schema_type = 'frontend'
+      GovukContentSchemaTestHelpers.configuration.schema_type = 'publisher'
     end
 
     after do
@@ -66,11 +77,19 @@ describe GovukContentSchemaTestHelpers::Validator do
       GovukContentSchemaTestHelpers.configuration.schema_type = nil
     end
 
+    describe 'with a valid document' do
+      it 'returns an empty array' do
+        errors = subject.new('redirect', a_valid_redirect_document).errors
+        expect(errors).to be_an(Array)
+        expect(errors).to be_empty
+      end
+    end
+
     describe 'with an invalid document' do
       it 'returns an array of errors from json-schema' do
         errors = subject.new('finder', '{}').errors
         expect(errors).to be_an(Array)
-        expect(errors.first).to start_with("The property '#/' did not contain a required property of 'base_path'")
+        expect(errors.first).to start_with("The property '#/' did not contain a required property of 'format'")
       end
     end
   end
@@ -78,12 +97,18 @@ describe GovukContentSchemaTestHelpers::Validator do
   describe '#valid?' do
     before do
       GovukContentSchemaTestHelpers.configuration.project_root = File.absolute_path(File.join(File.basename(__FILE__), '..'))
-      GovukContentSchemaTestHelpers.configuration.schema_type = 'frontend'
+      GovukContentSchemaTestHelpers.configuration.schema_type = 'publisher'
     end
 
     after do
       GovukContentSchemaTestHelpers.configuration.project_root = nil
       GovukContentSchemaTestHelpers.configuration.schema_type = nil
+    end
+
+    describe 'with a valid document' do
+      it 'returns true' do
+        expect(subject.new('redirect', a_valid_redirect_document).valid?).to eql(true)
+      end
     end
 
     describe 'with an invalid document' do
