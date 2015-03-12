@@ -14,7 +14,9 @@ This app provides test helpers for working with [alphagov/govuk-content-schemas]
 
 ### Usage
 
-You will need to configure which context your app is in. A good place to do this is in `test_helper.rb` or `spec_helper.rb`:
+Firstly, you will need a copy of [govuk-content-schemas](http://github.com/alphagov/govuk-content-schemas) on your file system. By default these should be in a sibling directory to your project. Alternatively, you can specify their location with the `GOVUK_CONTENT_SCHEMAS_PATH` environment variable. You should probably duplicate this paragraph (excluding this sentence) in your own `README`.
+
+You will need to configure which type of schemas your app uses. A good place to do this is in `test_helper.rb` or `spec_helper.rb`:
 
 ```ruby
   require 'govuk-content-schema-test-helpers'
@@ -52,7 +54,7 @@ To validate a document against the schema:
 
 ### Running the test suite
 
-The tests in this project rely upon [govuk-content-schemas](http://github.com/alphagov/govuk-content-schemas). By default these should be in the parent directory, otherwise you can specify their location with the `GOVUK_CONTENT_SCHEMAS_PATH` environment variable.
+The tests in this project rely upon [govuk-content-schemas](http://github.com/alphagov/govuk-content-schemas) on your file system. By default these should be in a sibling directory to your project. Alternatively, you can specify their location with the `GOVUK_CONTENT_SCHEMAS_PATH` environment variable.
 
 Assuming you already have govuk-content-schemas cloned:
 
