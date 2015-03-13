@@ -15,6 +15,7 @@ describe GovukContentSchemaTestHelpers::Util do
 
   describe '#govuk_content_schemas_path' do
     it 'returns an absolute path, using the default relative path' do
+      expect(ENV).to receive(:[]).with('GOVUK_CONTENT_SCHEMAS_PATH').and_return(nil)
       expect(subject.govuk_content_schemas_path).to eql('/an/absolute/govuk-content-schemas')
     end
 
