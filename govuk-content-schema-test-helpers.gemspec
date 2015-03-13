@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.description = "This app provides test helpers for working with [alphagov/govuk-content-schemas](https://github.com/alphagov/govuk-content-schemas)"
   s.authors     = ["Jamie Cobbett", "David Heath"]
   s.email       = ['jamie.cobbett@digital.cabinet-office.gov.uk', 'david.heath@digital.cabinet-office.gov.uk']
-  s.files       = ["lib/govuk-content-schema-test-helpers.rb"]
+  s.files       = Dir.glob("lib/**/*") + %w(LICENSE README.md)
   s.homepage    = 'https://github.com/alphagov/govuk-content-schema-test-helpers'
   s.license     = 'MIT'
 
