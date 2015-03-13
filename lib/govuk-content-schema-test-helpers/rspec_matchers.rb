@@ -12,10 +12,13 @@ module GovukContentSchemaTestHelpers
         "to be valid against '#{schema_name}' schema. Errors: #{validator.errors}"
       end
 
-      # Required for a helpful message with RSpec 2
-      failure_message_for_should do |actual|
-        validator = Validator.new(schema_name, actual)
-        "to be valid against '#{schema_name}' schema. Errors: #{validator.errors}"
+      if Gem.loaded_specs['rspec-expectations'].version < Gem::Version.new('3.0.0')
+        # Required for a helpful message with RSpec 2
+        # Generates a deprecation warning on 3.2.0
+        failure_message_for_should do |actual|
+          validator = Validator.new(schema_name, actual)
+          "to be valid against '#{schema_name}' schema. Errors: #{validator.errors}"
+        end
       end
     end
   end
