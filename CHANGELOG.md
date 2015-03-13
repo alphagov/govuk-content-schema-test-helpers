@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.0.2
+
+* Bugfix: avoid deprecation warning with rspec 3.2:
+  ```
+  `failure_message_for_should` is deprecated. Use `failure_message` instead
+  ```
+
 ## 1.0.1
 
 * Bugfix: only lib/govuk-content-schema-test-helpers.rb was being included, so
