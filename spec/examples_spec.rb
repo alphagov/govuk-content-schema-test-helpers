@@ -42,8 +42,51 @@ describe GovukContentSchemaTestHelpers::Examples do
 
     describe 'when the example does not exist' do
       it 'loads and parses the example file from govuk-content-schemas' do
-        expect { subject.new.get('made-up', 'or-a-typo') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /Schema file not found/)
+        expect { subject.new.get('made-up', 'or-a-typo') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /Example file not found/)
       end
+    end
+  end
+
+  describe '#get_all_for_format' do
+    before do
+      GovukContentSchemaTestHelpers.configuration.project_root = File.join(File.dirname(__FILE__), '..')
+      GovukContentSchemaTestHelpers.configuration.schema_type = 'frontend'
+    end
+
+    after do
+      GovukContentSchemaTestHelpers.configuration.project_root = nil
+      GovukContentSchemaTestHelpers.configuration.schema_type = nil
+    end
+
+    it 'returns all examples for the format in an array' do
+      examples = subject.new.get_all_for_format('case_study')
+      expect(examples).to be_an(Array)
+      expect(examples.size).to be >= 2
+      examples.each do |example|
+        parsed_example = JSON.parse(example)
+        expect(parsed_example["format"]).to eql("case_study")
+      end
+    end
+  end
+
+  describe '#get_all_for_formats' do
+    before do
+      GovukContentSchemaTestHelpers.configuration.project_root = File.join(File.dirname(__FILE__), '..')
+      GovukContentSchemaTestHelpers.configuration.schema_type = 'frontend'
+    end
+
+    after do
+      GovukContentSchemaTestHelpers.configuration.project_root = nil
+      GovukContentSchemaTestHelpers.configuration.schema_type = nil
+    end
+
+    it 'returns all examples for the formats in an array' do
+      examples = subject.new.get_all_for_formats(['case_study', 'finder'])
+      expect(examples).to be_an(Array)
+      expect(examples.size).to be >= 2
+
+      formats_returned = examples.map { |e| JSON.parse(e)['format'] }.uniq
+      expect(formats_returned).to match_array(['case_study', 'finder'])
     end
   end
 end
