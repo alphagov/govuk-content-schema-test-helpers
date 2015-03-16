@@ -12,7 +12,7 @@ module GovukContentSchemaTestHelpers
 
     def check_example_file_exists!(path)
       if !File.exists?(path)
-        raise ImproperlyConfiguredError, "Schema file not found: #{path}."
+        raise ImproperlyConfiguredError, "Example file not found: #{path}."
       end
     end
 

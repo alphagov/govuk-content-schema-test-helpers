@@ -42,7 +42,7 @@ describe GovukContentSchemaTestHelpers::Examples do
 
     describe 'when the example does not exist' do
       it 'loads and parses the example file from govuk-content-schemas' do
-        expect { subject.new.get('made-up', 'or-a-typo') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /Schema file not found/)
+        expect { subject.new.get('made-up', 'or-a-typo') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /Example file not found/)
       end
     end
   end
