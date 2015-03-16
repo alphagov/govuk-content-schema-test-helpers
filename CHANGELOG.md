@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.1.0
+
+* Feature: load all examples for a format or formats
+
 ## 1.0.2
 
 * Bugfix: avoid deprecation warning with rspec 3.2:
