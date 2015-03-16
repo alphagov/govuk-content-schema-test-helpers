@@ -10,6 +10,19 @@ module GovukContentSchemaTestHelpers
       File.read(path)
     end
 
+    def get_all_for_format(schema_name)
+      glob_path = example_path(schema_name, '*')
+      Dir.glob(glob_path).map do |path|
+        File.read(path)
+      end
+    end
+
+    def get_all_for_formats(schema_names)
+      schema_names.inject([]) do |memo, schema_name|
+        memo + get_all_for_format(schema_name)
+      end
+    end
+
     def check_example_file_exists!(path)
       if !File.exists?(path)
         raise ImproperlyConfiguredError, "Example file not found: #{path}."

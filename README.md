@@ -41,6 +41,42 @@ If you are not using Rails, you'll need to set `project_root` differently. Assum
   # => '{ "some": "json" }'
 ```
 
+#### Loading all examples for a given format
+
+
+```ruby
+  GovukContentSchemaTestHelpers::Examples.new.get_all_for_format('case_study')
+  # => ['{ "first": "example"}', '{ "second": "example" }']
+```
+
+This would be useful for checking your app can handle all examples and any that come into existence later:
+
+```ruby
+  def supported_formats
+    %w{
+      case_study
+      coming_soon
+    }
+  end
+
+  def all_examples_for_supported_formats
+    GovukContentSchemaTestHelpers::Examples.new.get_all_for_formats(supported_formats)
+  end
+
+  # In an ActionDispatch::IntegrationTest, for example:
+  test 'that we can handle every example of the formats we support'
+    all_examples_for_supported_formats.each do |example|
+      content_item = JSON.parse(example)
+      content_store_has_item(content_item['base_path'], content_item)
+
+      get content_item['base_path']
+      assert_response 200
+      assert_select 'title', content_item['title']
+    end
+  end
+```
+
+
 #### RSpec matcher
 
 To use the built-in RSpec matcher, add this to spec_helper.rb:
