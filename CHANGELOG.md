@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 1.2.0
 
 * Feature: add GovukContentSchemaTestHelpers::Util.formats to get a list of
 the formats defined in govuk-content-schemas.
