@@ -13,5 +13,14 @@ module GovukContentSchemaTestHelpers
         raise ImproperlyConfiguredError, message
       end
     end
+
+    # Get a list of the formats defined in govuk-content-schemas
+    def self.formats
+      Util.check_govuk_content_schemas_path!
+
+      formats_directory = File.join(Util.govuk_content_schemas_path, "/formats")
+      format_paths = Dir.glob("#{formats_directory}/*").select { |f| File.directory?(f) }
+      format_paths.map { |path| File.basename(path) }
+    end
   end
 end

@@ -33,4 +33,14 @@ describe GovukContentSchemaTestHelpers::Util do
       end
     end
   end
+
+  describe '#formats' do
+    before do
+      GovukContentSchemaTestHelpers.configuration.project_root = File.join(File.dirname(__FILE__), '..')
+    end
+
+    it 'returns the list of formats from govuk-content-schemas' do
+      expect(subject.formats).to include('case_study', 'finder')
+    end
+  end
 end
