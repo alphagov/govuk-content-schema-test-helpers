@@ -20,14 +20,27 @@ describe GovukContentSchemaTestHelpers::Validator do
     GovukContentSchemaTestHelpers.configuration.schema_type = nil
   end
 
-  describe '#schema_path' do
-    let(:schema_path) { "/an/absolute/path" }
-    let(:schema_type) { "a-type" }
+  describe '.schema_path' do
+    context 'with the original folder structure' do
+      let(:schema_path) { fixture_path }
+      let(:schema_type) { "frontend" }
 
-    it 'returns the absolute path for the given format schema, based on configuration' do
-      base_path = GovukContentSchemaTestHelpers::Util.govuk_content_schemas_path
-      expected_path = base_path + "/formats/minidisc/a-type/schema.json"
-      expect(subject.schema_path('minidisc')).to eql(expected_path)
+      it 'returns the absolute path for the given format schema, based on configuration' do
+        base_path = GovukContentSchemaTestHelpers::Util.govuk_content_schemas_path
+        expected_path = base_path + "/formats/minidisc/frontend/schema.json"
+        expect(subject.schema_path('minidisc')).to eql(expected_path)
+      end
+    end
+
+    context 'with generated files in the dist directory' do
+      let(:schema_path) { fixture_path('govuk-content-schemas-with-dist') }
+      let(:schema_type) { "frontend" }
+
+      it 'returns the absolute path for the given format schema, based on configuration' do
+        base_path = GovukContentSchemaTestHelpers::Util.govuk_content_schemas_path
+        expected_path = base_path + "/dist/formats/minidisc/frontend/schema.json"
+        expect(subject.schema_path('minidisc')).to eql(expected_path)
+      end
     end
   end
 
