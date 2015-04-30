@@ -1,29 +1,28 @@
 require 'spec_helper'
 
-def a_valid_redirect_document
+def a_valid_minidisc_document
   {
-    "format" => "redirect",
-    "publishing_app" => "publisher",
-    "update_type" => "major",
-    "redirects" => [
-      {"path" => "/foo", "type" => "prefix", "destination" => "/new-foo"},
-    ]
+    "format" => "minidisc",
   }
 end
 
 describe GovukContentSchemaTestHelpers::Validator do
   let(:subject) { GovukContentSchemaTestHelpers::Validator }
 
-  describe '#schema_path' do
-    before do
-      GovukContentSchemaTestHelpers.configuration.project_root = '/an/absolute/path'
-      GovukContentSchemaTestHelpers.configuration.schema_type = 'a-type'
-    end
+  around do |example|
+    old_path = ENV['GOVUK_CONTENT_SCHEMAS_PATH']
+    ENV['GOVUK_CONTENT_SCHEMAS_PATH'] = schema_path
+    GovukContentSchemaTestHelpers.configuration.schema_type = schema_type
 
-    after do
-      GovukContentSchemaTestHelpers.configuration.project_root = nil
-      GovukContentSchemaTestHelpers.configuration.schema_type = nil
-    end
+    example.call
+
+    ENV['GOVUK_CONTENT_SCHEMAS_PATH'] = old_path
+    GovukContentSchemaTestHelpers.configuration.schema_type = nil
+  end
+
+  describe '#schema_path' do
+    let(:schema_path) { "/an/absolute/path" }
+    let(:schema_type) { "a-type" }
 
     it 'returns the absolute path for the given format schema, based on configuration' do
       base_path = GovukContentSchemaTestHelpers::Util.govuk_content_schemas_path
@@ -34,17 +33,8 @@ describe GovukContentSchemaTestHelpers::Validator do
 
   describe '#initialize' do
     describe 'when the govuk-content-schemas directory does not exist' do
-      before do
-        GovukContentSchemaTestHelpers.configuration.project_root = '/an/absolute/path'
-        GovukContentSchemaTestHelpers.configuration.schema_type = 'a-type'
-
-        allow(ENV).to receive(:[]).with('GOVUK_CONTENT_SCHEMAS_PATH').and_return('../a-non-existent-path')
-      end
-
-      after do
-        GovukContentSchemaTestHelpers.configuration.project_root = nil
-        GovukContentSchemaTestHelpers.configuration.schema_type = nil
-      end
+      let(:schema_path) { "/non-existent-path" }
+      let(:schema_type) { "frontend" }
 
       it 'raises an error' do
         expect { subject.new('foo',  '{}') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /govuk-content-schemas cannot be found/)
@@ -52,15 +42,8 @@ describe GovukContentSchemaTestHelpers::Validator do
     end
 
     describe 'when the schema file does not exist' do
-      before do
-        GovukContentSchemaTestHelpers.configuration.project_root = File.join(File.dirname(__FILE__), '..')
-        GovukContentSchemaTestHelpers.configuration.schema_type = 'a-type'
-      end
-
-      after do
-        GovukContentSchemaTestHelpers.configuration.project_root = nil
-        GovukContentSchemaTestHelpers.configuration.schema_type = nil
-      end
+      let(:schema_path) { fixture_path }
+      let(:schema_type) { "a-non-existent-type" }
 
       it 'raises an error' do
         expect { subject.new('foo',  '{}') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /schema file not found/i)
@@ -69,19 +52,12 @@ describe GovukContentSchemaTestHelpers::Validator do
   end
 
   describe '#errors' do
-    before do
-      GovukContentSchemaTestHelpers.configuration.project_root = File.absolute_path(File.join(File.basename(__FILE__), '..'))
-      GovukContentSchemaTestHelpers.configuration.schema_type = 'publisher'
-    end
-
-    after do
-      GovukContentSchemaTestHelpers.configuration.project_root = nil
-      GovukContentSchemaTestHelpers.configuration.schema_type = nil
-    end
+    let(:schema_path) { fixture_path }
+    let(:schema_type) { "publisher" }
 
     describe 'with a valid document' do
       it 'returns an empty array' do
-        errors = subject.new('redirect', a_valid_redirect_document).errors
+        errors = subject.new('minidisc', a_valid_minidisc_document).errors
         expect(errors).to be_an(Array)
         expect(errors).to be_empty
       end
@@ -89,7 +65,7 @@ describe GovukContentSchemaTestHelpers::Validator do
 
     describe 'with an invalid document' do
       it 'returns an array of errors from json-schema' do
-        errors = subject.new('finder', '{}').errors
+        errors = subject.new('minidisc', '{}').errors
         expect(errors).to be_an(Array)
         expect(errors.first).to start_with("The property '#/' did not contain a required property of 'format'")
       end
@@ -97,25 +73,18 @@ describe GovukContentSchemaTestHelpers::Validator do
   end
 
   describe '#valid?' do
-    before do
-      GovukContentSchemaTestHelpers.configuration.project_root = File.absolute_path(File.join(File.basename(__FILE__), '..'))
-      GovukContentSchemaTestHelpers.configuration.schema_type = 'publisher'
-    end
-
-    after do
-      GovukContentSchemaTestHelpers.configuration.project_root = nil
-      GovukContentSchemaTestHelpers.configuration.schema_type = nil
-    end
+    let(:schema_path) { fixture_path }
+    let(:schema_type) { "publisher" }
 
     describe 'with a valid document' do
       it 'returns true' do
-        expect(subject.new('redirect', a_valid_redirect_document).valid?).to eql(true)
+        expect(subject.new('minidisc', a_valid_minidisc_document).valid?).to eql(true)
       end
     end
 
     describe 'with an invalid document' do
       it 'returns false' do
-        expect(subject.new('finder', '{}').valid?).to eql(false)
+        expect(subject.new('minidisc', '{}').valid?).to eql(false)
       end
     end
   end

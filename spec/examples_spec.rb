@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe GovukContentSchemaTestHelpers::Examples do
   let(:subject) { GovukContentSchemaTestHelpers::Examples }
-  let(:fixture_path) { File.join(File.dirname(__FILE__), 'fixtures', 'govuk-content-schemas') }
 
   describe '#initialize' do
     describe 'when the govuk-content-schemas directory does not exist' do
