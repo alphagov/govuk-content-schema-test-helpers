@@ -3,44 +3,50 @@ require 'spec_helper'
 describe GovukContentSchemaTestHelpers::Util do
   let(:subject) { GovukContentSchemaTestHelpers::Util }
 
-  before do
-    GovukContentSchemaTestHelpers.configuration.project_root = '/an/absolute/path'
+  around do |example|
+    old_path = ENV['GOVUK_CONTENT_SCHEMAS_PATH']
+    ENV['GOVUK_CONTENT_SCHEMAS_PATH'] = schema_path
     GovukContentSchemaTestHelpers.configuration.schema_type = 'a-type'
-  end
+    GovukContentSchemaTestHelpers.configuration.project_root = '/an/absolute/path'
 
-  after do
-    GovukContentSchemaTestHelpers.configuration.project_root = nil
+    example.call
+
+    ENV['GOVUK_CONTENT_SCHEMAS_PATH'] = old_path
     GovukContentSchemaTestHelpers.configuration.schema_type = nil
+    GovukContentSchemaTestHelpers.configuration.project_root = nil
   end
 
   describe '#govuk_content_schemas_path' do
-    it 'returns an absolute path, using the default relative path' do
-      expect(ENV).to receive(:[]).with('GOVUK_CONTENT_SCHEMAS_PATH').and_return(nil)
-      expect(subject.govuk_content_schemas_path).to eql('/an/absolute/govuk-content-schemas')
+    context 'GOVUK_CONTENT_SCHEMAS_PATH ENV var is not set' do
+      let(:schema_path) { nil }
+
+      it 'returns an absolute path, using the default relative path' do
+        expect(subject.govuk_content_schemas_path).to eql('/an/absolute/govuk-content-schemas')
+      end
     end
 
-    describe 'when the environment variable is set' do
-      it 'returns an absolute path, using the environment variable' do
-        expect(ENV).to receive(:[]).with('GOVUK_CONTENT_SCHEMAS_PATH').and_return('../a-custom-path')
+    context 'GOVUK_CONTENT_SCHEMAS_PATH ENV var is set to a relative path' do
+      let(:schema_path) { "../a-custom-path" }
+
+      it 'computes an absolute path by combining the project_root and environment variable' do
         expect(subject.govuk_content_schemas_path).to eql('/an/absolute/a-custom-path')
       end
     end
 
-    describe 'when the environment variable is set to an absolute path' do
-      it 'returns an absolute path, using the environment variable' do
-        expect(ENV).to receive(:[]).with('GOVUK_CONTENT_SCHEMAS_PATH').and_return('/a/custom/absolute/path/')
-        expect(subject.govuk_content_schemas_path).to eql('/a/custom/absolute/path')
+    context 'GOVUK_CONTENT_SCHEMAS_PATH ENV var is set to an absolute path' do
+      let(:schema_path) { "/a/custom/absolute/path/" }
+
+      it 'returns the value of GOVUK_CONTENT_SCHEMAS_PATH unchanged' do
+        expect(subject.govuk_content_schemas_path).to eql('/a/custom/absolute/path/')
       end
     end
   end
 
   describe '#formats' do
-    before do
-      GovukContentSchemaTestHelpers.configuration.project_root = File.join(File.dirname(__FILE__), '..')
-    end
+    let(:schema_path) { fixture_path }
 
     it 'returns the list of formats from govuk-content-schemas' do
-      expect(subject.formats).to include('case_study', 'finder')
+      expect(subject.formats).to include('minidisc')
     end
   end
 end
