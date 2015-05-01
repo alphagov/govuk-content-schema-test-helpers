@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 1.3.0
+
+* Feature: add support for the new directory structure of govuk-content-schemas,
+whereby the location of the schemas (which are compiled) will move into the
+`dist/` directory. Apps validating against schemas (generally just publishing
+apps) should upgrade as soon as possible. Support for the older directory
+structure is retained but will be removed once all clients have been upgraded
+and govuk-content-schemas has been changed.
+
 ## 1.2.0
 
 * Feature: add GovukContentSchemaTestHelpers::Util.formats to get a list of
