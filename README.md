@@ -124,10 +124,6 @@ Then in a test:
 
 ### Running the test suite
 
-The tests in this project rely upon [govuk-content-schemas](http://github.com/alphagov/govuk-content-schemas) on your file system. By default these should be in a sibling directory to your project. Alternatively, you can specify their location with the `GOVUK_CONTENT_SCHEMAS_PATH` environment variable.
-
-Assuming you already have govuk-content-schemas cloned:
-
 ```
   bundle exec rake
 ```
