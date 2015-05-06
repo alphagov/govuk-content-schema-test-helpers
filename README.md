@@ -18,7 +18,7 @@ This app provides test helpers for working with [alphagov/govuk-content-schemas]
 
 Firstly, you will need a copy of [govuk-content-schemas](http://github.com/alphagov/govuk-content-schemas) on your file system. By default these should be in a sibling directory to your project. Alternatively, you can specify their location with the `GOVUK_CONTENT_SCHEMAS_PATH` environment variable. You should probably duplicate this paragraph (excluding this sentence) in your own `README`.
 
-You will need to configure which type of schemas your app uses. A good place to do this is in `test_helper.rb` or `spec_helper.rb`:
+You will need to configure which type of schemas your app uses. A good place to do this is in `test_helper.rb` or `spec/support/govuk_content_schemas.rb`:
 
 ```ruby
   require 'govuk-content-schema-test-helpers'
@@ -79,11 +79,11 @@ This would be useful for checking your app can handle all examples and any that 
 
 #### RSpec matcher
 
-To use the built-in RSpec matcher, add this to spec_helper.rb:
+To use the built-in RSpec matcher, add this to `spec/support/govuk_content_schemas.rb`:
 
 ```ruby
   require 'govuk-content-schema-test-helpers/rspec_matchers'
-  include GovukContentSchemaTestHelpers::RSpecMatchers
+  RSpec.configuration.include GovukContentSchemaTestHelpers::RSpecMatchers
 ```
 
 Then:
