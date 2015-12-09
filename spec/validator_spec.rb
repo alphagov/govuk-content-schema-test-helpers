@@ -20,30 +20,6 @@ describe GovukContentSchemaTestHelpers::Validator do
     GovukContentSchemaTestHelpers.configuration.schema_type = nil
   end
 
-  describe '.schema_path' do
-    context 'with the original folder structure' do
-      let(:schema_path) { fixture_path }
-      let(:schema_type) { "frontend" }
-
-      it 'returns the absolute path for the given format schema, based on configuration' do
-        base_path = GovukContentSchemaTestHelpers::Util.govuk_content_schemas_path
-        expected_path = base_path + "/formats/minidisc/frontend/schema.json"
-        expect(subject.schema_path('minidisc')).to eql(expected_path)
-      end
-    end
-
-    context 'with generated files in the dist directory' do
-      let(:schema_path) { fixture_path('govuk-content-schemas-with-dist') }
-      let(:schema_type) { "frontend" }
-
-      it 'returns the absolute path for the given format schema, based on configuration' do
-        base_path = GovukContentSchemaTestHelpers::Util.govuk_content_schemas_path
-        expected_path = base_path + "/dist/formats/minidisc/frontend/schema.json"
-        expect(subject.schema_path('minidisc')).to eql(expected_path)
-      end
-    end
-  end
-
   describe '#initialize' do
     describe 'when the govuk-content-schemas directory does not exist' do
       let(:schema_path) { "/non-existent-path" }
@@ -51,15 +27,6 @@ describe GovukContentSchemaTestHelpers::Validator do
 
       it 'raises an error' do
         expect { subject.new('foo',  '{}') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /govuk-content-schemas cannot be found/)
-      end
-    end
-
-    describe 'when the schema file does not exist' do
-      let(:schema_path) { fixture_path }
-      let(:schema_type) { "a-non-existent-type" }
-
-      it 'raises an error' do
-        expect { subject.new('foo',  '{}') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /schema file not found/i)
       end
     end
   end
@@ -98,6 +65,15 @@ describe GovukContentSchemaTestHelpers::Validator do
     describe 'with an invalid document' do
       it 'returns false' do
         expect(subject.new('minidisc', '{}').valid?).to eql(false)
+      end
+    end
+
+    describe 'when the schema file does not exist' do
+      let(:schema_path) { fixture_path }
+      let(:schema_type) { "a-non-existent-type" }
+
+      it 'raises an error' do
+        expect { subject.new('foo',  '{}').valid? }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /schema file not found/i)
       end
     end
   end
