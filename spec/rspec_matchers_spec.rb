@@ -25,4 +25,18 @@ describe GovukContentSchemaTestHelpers::RSpecMatchers do
       ).to_not be_valid_against_schema('minidisc')
     end
   end
+
+  describe "#be_valid_against_links_schema" do
+    it "correctly tests valid links" do
+      expect(
+        topics: ["topics"]
+      ).to be_valid_against_links_schema('minidisc')
+    end
+
+    it "fails for invalid schemas" do
+      expect(
+        not_topics: ["topics"]
+      ).to_not be_valid_against_links_schema('minidisc')
+    end
+  end
 end

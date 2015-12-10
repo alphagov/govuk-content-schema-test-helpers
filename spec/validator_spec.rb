@@ -26,7 +26,7 @@ describe GovukContentSchemaTestHelpers::Validator do
       let(:schema_type) { "frontend" }
 
       it 'raises an error' do
-        expect { subject.new('foo',  '{}') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /govuk-content-schemas cannot be found/)
+        expect { subject.new('foo', 'schema', '{}') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /govuk-content-schemas cannot be found/)
       end
     end
   end
@@ -37,7 +37,7 @@ describe GovukContentSchemaTestHelpers::Validator do
 
     describe 'with a valid document' do
       it 'returns an empty array' do
-        errors = subject.new('minidisc', a_valid_minidisc_document).errors
+        errors = subject.new('minidisc', 'schema', a_valid_minidisc_document).errors
         expect(errors).to be_an(Array)
         expect(errors).to be_empty
       end
@@ -45,7 +45,7 @@ describe GovukContentSchemaTestHelpers::Validator do
 
     describe 'with an invalid document' do
       it 'returns an array of errors from json-schema' do
-        errors = subject.new('minidisc', '{}').errors
+        errors = subject.new('minidisc', 'schema', '{}').errors
         expect(errors).to be_an(Array)
         expect(errors.first).to start_with("The property '#/' did not contain a required property of 'format'")
       end
@@ -58,13 +58,13 @@ describe GovukContentSchemaTestHelpers::Validator do
 
     describe 'with a valid document' do
       it 'returns true' do
-        expect(subject.new('minidisc', a_valid_minidisc_document).valid?).to eql(true)
+        expect(subject.new('minidisc', 'schema', a_valid_minidisc_document).valid?).to eql(true)
       end
     end
 
     describe 'with an invalid document' do
       it 'returns false' do
-        expect(subject.new('minidisc', '{}').valid?).to eql(false)
+        expect(subject.new('minidisc', 'schema', '{}').valid?).to eql(false)
       end
     end
 
@@ -73,7 +73,7 @@ describe GovukContentSchemaTestHelpers::Validator do
       let(:schema_type) { "a-non-existent-type" }
 
       it 'raises an error' do
-        expect { subject.new('foo',  '{}').valid? }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /schema file not found/i)
+        expect { subject.new('foo', 'schema',  '{}').valid? }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /schema file not found/i)
       end
     end
   end

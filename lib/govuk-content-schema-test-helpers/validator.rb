@@ -2,12 +2,12 @@ require 'json-schema'
 
 module GovukContentSchemaTestHelpers
   class Validator
-    # schema_name should be a string, such as 'finder'
-    # document should be a JSON string of the document to validate
-    def initialize(schema_name, document)
+    # @param schema - the format (like `topic`). Use `format.links` for the
+    def initialize(schema_name, variant, document)
       Util.check_govuk_content_schemas_path!
 
       @schema_name = schema_name
+      @variant = variant
       @document = document
     end
 
@@ -27,10 +27,11 @@ module GovukContentSchemaTestHelpers
     def schema_path
       File.join(
         Util.govuk_content_schemas_path,
-        "dist/formats",
+        "dist",
+        "formats",
         @schema_name,
         GovukContentSchemaTestHelpers.configuration.schema_type,
-        "schema.json"
+        "#{@variant}.json"
       )
     end
   end

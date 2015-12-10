@@ -154,7 +154,7 @@ Then in a test:
 ##### Validating against the schema manually
 
 ```ruby
-  validator = GovukContentSchemaTestHelpers::Validator.new('finder', '{ "some": "json" }')
+  validator = GovukContentSchemaTestHelpers::Validator.new('finder', 'schema', '{ "some": "json" }')
   validator.valid?
   # => false
   validator.errors
