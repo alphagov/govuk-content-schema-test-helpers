@@ -2,18 +2,12 @@ require 'json-schema'
 
 module GovukContentSchemaTestHelpers
   class Validator
-    # Return the first schema path that exists on the filesystem
-    def self.schema_path(schema_name)
-      paths = candidate_schema_paths(schema_name)
-      paths.detect { |path| File.exists?(path) } ||
-        raise(ImproperlyConfiguredError, "Schema file not found at any of: #{paths.join(', ')}.")
-    end
-
-    # schema_name should be a string, such as 'finder'
-    # document should be a JSON string of the document to validate
-    def initialize(schema_name, document)
+    # @param schema - the format (like `topic`). Use `format.links` for the
+    def initialize(schema_name, variant, document)
       Util.check_govuk_content_schemas_path!
-      @schema_path = GovukContentSchemaTestHelpers::Validator.schema_path(schema_name)
+
+      @schema_name = schema_name
+      @variant = variant
       @document = document
     end
 
@@ -22,22 +16,23 @@ module GovukContentSchemaTestHelpers
     end
 
     def errors
-      @errors ||= JSON::Validator.fully_validate(@schema_path, @document)
+      unless File.exists?(schema_path)
+        raise ImproperlyConfiguredError, "Schema file not found at: #{schema_path}"
+      end
+
+      @errors ||= JSON::Validator.fully_validate(schema_path, @document)
     end
 
   private
-    def self.construct_schema_path(prefix, schema_name)
+    def schema_path
       File.join(
         Util.govuk_content_schemas_path,
-        prefix,
-        schema_name,
+        "dist",
+        "formats",
+        @schema_name,
         GovukContentSchemaTestHelpers.configuration.schema_type,
-        "schema.json"
+        "#{@variant}.json"
       )
-    end
-
-    def self.candidate_schema_paths(schema_name)
-      ["dist/formats", "formats"].map { |prefix| construct_schema_path(prefix, schema_name) }
     end
   end
 end

@@ -3,6 +3,6 @@ Bundler.setup
 
 require 'govuk-content-schema-test-helpers'
 
-def fixture_path(fixture_name = 'govuk-content-schemas')
-  File.join(File.dirname(__FILE__), 'fixtures', fixture_name)
+def fixture_path
+  File.join(File.dirname(__FILE__), 'fixtures', 'govuk-content-schemas')
 end

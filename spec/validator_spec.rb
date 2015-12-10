@@ -20,46 +20,13 @@ describe GovukContentSchemaTestHelpers::Validator do
     GovukContentSchemaTestHelpers.configuration.schema_type = nil
   end
 
-  describe '.schema_path' do
-    context 'with the original folder structure' do
-      let(:schema_path) { fixture_path }
-      let(:schema_type) { "frontend" }
-
-      it 'returns the absolute path for the given format schema, based on configuration' do
-        base_path = GovukContentSchemaTestHelpers::Util.govuk_content_schemas_path
-        expected_path = base_path + "/formats/minidisc/frontend/schema.json"
-        expect(subject.schema_path('minidisc')).to eql(expected_path)
-      end
-    end
-
-    context 'with generated files in the dist directory' do
-      let(:schema_path) { fixture_path('govuk-content-schemas-with-dist') }
-      let(:schema_type) { "frontend" }
-
-      it 'returns the absolute path for the given format schema, based on configuration' do
-        base_path = GovukContentSchemaTestHelpers::Util.govuk_content_schemas_path
-        expected_path = base_path + "/dist/formats/minidisc/frontend/schema.json"
-        expect(subject.schema_path('minidisc')).to eql(expected_path)
-      end
-    end
-  end
-
   describe '#initialize' do
     describe 'when the govuk-content-schemas directory does not exist' do
       let(:schema_path) { "/non-existent-path" }
       let(:schema_type) { "frontend" }
 
       it 'raises an error' do
-        expect { subject.new('foo',  '{}') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /govuk-content-schemas cannot be found/)
-      end
-    end
-
-    describe 'when the schema file does not exist' do
-      let(:schema_path) { fixture_path }
-      let(:schema_type) { "a-non-existent-type" }
-
-      it 'raises an error' do
-        expect { subject.new('foo',  '{}') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /schema file not found/i)
+        expect { subject.new('foo', 'schema', '{}') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /govuk-content-schemas cannot be found/)
       end
     end
   end
@@ -70,7 +37,7 @@ describe GovukContentSchemaTestHelpers::Validator do
 
     describe 'with a valid document' do
       it 'returns an empty array' do
-        errors = subject.new('minidisc', a_valid_minidisc_document).errors
+        errors = subject.new('minidisc', 'schema', a_valid_minidisc_document).errors
         expect(errors).to be_an(Array)
         expect(errors).to be_empty
       end
@@ -78,7 +45,7 @@ describe GovukContentSchemaTestHelpers::Validator do
 
     describe 'with an invalid document' do
       it 'returns an array of errors from json-schema' do
-        errors = subject.new('minidisc', '{}').errors
+        errors = subject.new('minidisc', 'schema', '{}').errors
         expect(errors).to be_an(Array)
         expect(errors.first).to start_with("The property '#/' did not contain a required property of 'format'")
       end
@@ -91,13 +58,22 @@ describe GovukContentSchemaTestHelpers::Validator do
 
     describe 'with a valid document' do
       it 'returns true' do
-        expect(subject.new('minidisc', a_valid_minidisc_document).valid?).to eql(true)
+        expect(subject.new('minidisc', 'schema', a_valid_minidisc_document).valid?).to eql(true)
       end
     end
 
     describe 'with an invalid document' do
       it 'returns false' do
-        expect(subject.new('minidisc', '{}').valid?).to eql(false)
+        expect(subject.new('minidisc', 'schema', '{}').valid?).to eql(false)
+      end
+    end
+
+    describe 'when the schema file does not exist' do
+      let(:schema_path) { fixture_path }
+      let(:schema_type) { "a-non-existent-type" }
+
+      it 'raises an error' do
+        expect { subject.new('foo', 'schema',  '{}').valid? }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /schema file not found/i)
       end
     end
   end
