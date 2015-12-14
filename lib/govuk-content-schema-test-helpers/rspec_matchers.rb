@@ -6,18 +6,15 @@ module GovukContentSchemaTestHelpers
         validator.valid?
       end
 
-      # Required for a helpful message with RSpec 3
-      description do |actual|
-        validator = Validator.new(schema_name, "schema", actual)
-        "to be valid against '#{schema_name}' schema. Errors: #{validator.errors}"
-      end
-
-      if Gem.loaded_specs['rspec-expectations'].version < Gem::Version.new('3.0.0')
-        # Required for a helpful message with RSpec 2
-        # Generates a deprecation warning on 3.2.0
+      # `failure_message` is RSpec 3.0, `failure_message_for_should` also works
+      # in 2.X, but deprecated in rspec 3.0.
+      if respond_to?(:failure_message)
+        failure_message do |actual|
+          ValidationErrorMessage.new(schema_name, "schema", actual).message
+        end
+      else
         failure_message_for_should do |actual|
-          validator = Validator.new(schema_name, "schema", actual)
-          "to be valid against '#{schema_name}' schema. Errors: #{validator.errors}"
+          ValidationErrorMessage.new(schema_name, "schema", actual).message
         end
       end
     end
@@ -28,20 +25,53 @@ module GovukContentSchemaTestHelpers
         validator.valid?
       end
 
-      # Required for a helpful message with RSpec 3
-      description do |actual|
-        validator = Validator.new(schema_name, "links", actual)
-        "to be valid against '#{schema_name}' schema. Errors: #{validator.errors}"
-      end
-
-      if Gem.loaded_specs['rspec-expectations'].version < Gem::Version.new('3.0.0')
-        # Required for a helpful message with RSpec 2
-        # Generates a deprecation warning on 3.2.0
+      # `failure_message` is RSpec 3.0, `failure_message_for_should` also works
+      # in 2.X, but deprecated in rspec 3.0.
+      if respond_to?(:failure_message)
+        failure_message do |actual|
+          ValidationErrorMessage.new(schema_name, "links", actual).message
+        end
+      else
         failure_message_for_should do |actual|
-          validator = Validator.new(schema_name, "links", actual)
-          "to be valid against '#{schema_name}' schema. Errors: #{validator.errors}"
+          ValidationErrorMessage.new(schema_name, "links", actual).message
         end
       end
+    end
+  end
+
+  class ValidationErrorMessage
+    attr_reader :schema_name, :type, :payload
+
+    def initialize(schema_name, type, payload)
+      @schema_name = schema_name
+      @type = type
+      @payload = payload
+    end
+
+    def message
+<<-doc
+expected the payload to be valid against the '#{schema_name}' schema:
+
+#{formatted_payload}
+
+Validation errors:
+#{errors}
+doc
+    end
+
+  private
+    def errors
+      validator = Validator.new(schema_name, type, payload)
+      validator.errors.map { |message| "- " + humanized_error(message) }.join("\n")
+    end
+
+    def formatted_payload
+      return payload if payload.is_a?(String)
+      JSON.pretty_generate(payload)
+    end
+
+    def humanized_error(message)
+      message.gsub("The property '#/'", "The item")
     end
   end
 end
