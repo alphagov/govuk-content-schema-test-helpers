@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.4.0
+
+* Improve the test output for schema validation.
+* Enable testing against the `links` schemas with `be_valid_against_links_schema`.
+
 ## 1.3.0
 
 * Feature: add support for the new directory structure of govuk-content-schemas,
