@@ -24,7 +24,7 @@ You will need to configure which type of schemas your app uses. A good place to 
   require 'govuk-content-schema-test-helpers'
 
   GovukContentSchemaTestHelpers.configure do |config|
-    config.schema_type = 'frontend' # or 'publisher'
+    config.schema_type = 'frontend' # or 'publisher_v2'
     config.project_root = Rails.root
   end
 ```
