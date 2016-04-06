@@ -12,8 +12,14 @@ module GovukContentSchemaTestHelpers
 
     def get_all_for_format(schema_name)
       glob_path = example_path(schema_name, '*')
-      Dir.glob(glob_path).map do |path|
-        File.read(path)
+      example_paths = Dir.glob(glob_path)
+
+      if example_paths.any?
+        example_paths.map do |path|
+          File.read(path)
+        end
+      else
+        raise ImproperlyConfiguredError, "No examples found for schema: #{schema_name}"
       end
     end
 

@@ -59,6 +59,11 @@ describe GovukContentSchemaTestHelpers::Examples do
           expect(parsed_example["format"]).to eql("minidisc")
         end
       end
+
+      it 'raises an exception if no examples are found for a requested formated' do
+        expect { subject.new.get_all_for_formats(['blah_format']) }.
+          to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, "No examples found for schema: blah_format")
+      end
     end
 
     describe '#get_all_for_formats' do
