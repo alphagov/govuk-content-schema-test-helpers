@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+* Allow looking up examples to work with schemas stored in
+formats/{format}/{schema_type}/examples/ and examples/{format}/{schema_type}/
+to allow schema examples to move.
+
 ## 1.4.0
 
 * Improve the test output for schema validation.

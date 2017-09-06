@@ -42,6 +42,14 @@ describe GovukContentSchemaTestHelpers::Examples do
         end
       end
 
+      describe 'when the example exists in the legacy location' do
+        it 'loads and parses the example file from govuk-content-schemas' do
+          example = subject.new.get('minidisc', 'my_legacy_example')
+          parsed_example = JSON.parse(example)
+          expect(parsed_example["base_path"]).to eql("/my-minidisc-example")
+        end
+      end
+
       describe 'when the example does not exist' do
         it 'loads and parses the example file from govuk-content-schemas' do
           expect { subject.new.get('made-up', 'or-a-typo') }.to raise_error(GovukContentSchemaTestHelpers::ImproperlyConfiguredError, /Example file not found/)
