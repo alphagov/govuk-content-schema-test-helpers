@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'json-schema', '~> 2.5.1'
 
-  s.add_development_dependency 'gem_publisher', '1.5.0'
   s.add_development_dependency 'rake', '10.4.2'
   s.add_development_dependency 'rspec', '3.2.0'
   s.add_development_dependency 'pry-byebug'
