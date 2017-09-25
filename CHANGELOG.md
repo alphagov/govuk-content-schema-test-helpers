@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 1.5.0
 
 * Allow looking up examples to work with schemas stored in
 formats/{format}/{schema_type}/examples/ and examples/{format}/{schema_type}/
