@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+Update json-schema dependency.
+
 ## 1.5.0
 
 * Allow looking up examples to work with schemas stored in
