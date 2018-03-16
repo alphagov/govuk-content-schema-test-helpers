@@ -16,7 +16,7 @@ module GovukContentSchemaTestHelpers
     end
 
     def errors
-      unless File.exists?(schema_path)
+      unless File.exist?(schema_path)
         raise ImproperlyConfiguredError, "Schema file not found at: #{schema_path}"
       end
 

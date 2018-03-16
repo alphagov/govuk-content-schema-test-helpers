@@ -1,8 +1,12 @@
 # CHANGELOG
 
+## Unreleased
+
+* Change `File.exists?` to `File.exist?` to stop deprecation messages
+
 ## 1.6.0
 
-Update json-schema dependency.
+* Update json-schema dependency.
 
 ## 1.5.0
 
