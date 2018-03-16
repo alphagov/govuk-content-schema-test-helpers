@@ -5,13 +5,14 @@ describe GovukContentSchemaTestHelpers::Examples do
 
   describe '#initialize' do
     describe 'when the govuk-content-schemas directory does not exist' do
-      before do
-        GovukContentSchemaTestHelpers.configuration.project_root = '/non-existent-path'
+      around do |example|
+        old_path = ENV['GOVUK_CONTENT_SCHEMAS_PATH']
+        ENV['GOVUK_CONTENT_SCHEMAS_PATH'] = '/non-existent-path'
         GovukContentSchemaTestHelpers.configuration.schema_type = 'frontend'
-      end
 
-      after do
-        GovukContentSchemaTestHelpers.configuration.project_root = nil
+        example.call
+
+        ENV['GOVUK_CONTENT_SCHEMAS_PATH'] = old_path
         GovukContentSchemaTestHelpers.configuration.schema_type = nil
       end
 

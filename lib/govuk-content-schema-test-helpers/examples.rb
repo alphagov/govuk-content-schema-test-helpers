@@ -36,8 +36,8 @@ module GovukContentSchemaTestHelpers
   private
 
     def check_an_example_file_exists(path, legacy_path)
-      return path if File.exists?(path)
-      return legacy_path if File.exists?(legacy_path)
+      return path if File.exist?(path)
+      return legacy_path if File.exist?(legacy_path)
 
       raise ImproperlyConfiguredError, "Example file not found, checked: #{path} and #{legacy_path}."
     end
