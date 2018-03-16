@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 1.6.1
 
 * Change `File.exists?` to `File.exist?` to stop deprecation messages
 
